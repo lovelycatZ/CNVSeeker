@@ -54,7 +54,7 @@ conda env create -f snakemake.yml
 **Create conda environment for CNV interpretation module:**
 ```
 cd /path/to/CNVSeeker/cnv/cnv-inter/workflow/envs/
-conda env create -f interpret_env.yml
+conda env create -f conda.interpret.yml
 ```
 
 ## Quick run
