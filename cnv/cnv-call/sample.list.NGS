@@ -1,0 +1,179 @@
+###############################################################################################
+#                                         NOTE                                                #
+#  1. For the 1st column, you should provide sample id. It is recommended giving the id that  #
+#     is consistent with SM tag in BAM header if bam/cram sample.                             #
+#  2. For the 2nd column, you should provide sample tag to point out whether the sample is    #
+#     case or control. The single character "S" and "C" represents cases and control,         #
+#     respectively.                                                                           #
+#  3. For the 3rd column, it should be the absolute path of bam or cram sample or the read 1  #
+#     sequencing fastq sample.                                                                #
+#  4. For the 4th column, it should be the absolute path of the read 2 sequencing fastq       #
+#	  sample if the 3rd column is fastq sample.                                               #
+#  5. Mixed input types are allowed.                                                          #
+#  6. Non-sample line must be starts with "#".                                                #
+#  7. Various file suffix are allowed such as fq, fq.gz, fastq, fastq.gz, bam, cram.          #
+###############################################################################################
+
+# s1	S	s1.R1.fastq/s1.R1.fastq.gz/s1.R1.fq/s1.R1.fq.gz	s1.R2.fastq/s1.R2.fastq.gz/s1.R2.fq/s1.R2.fq.gz
+# s2	S	s2.bam
+# s2	C	s3.cram
+
+
+M10045	S	/gpfs/hpc/home/lijc/xiangxud/data/LD_WGS_demo/M10045_3X_1.fq.gz	/gpfs/hpc/home/lijc/xiangxud/data/LD_WGS_demo/M10045_3X_1.fq.gz
+M12315	S	/gpfs/hpc/home/lijc/xiangxud/data/LD_WGS_demo/M12315_3X_1.fq.gz	/gpfs/hpc/home/lijc/xiangxud/data/LD_WGS_demo/M12315_3X_1.fq.gz
+M12449	S	/gpfs/hpc/home/lijc/xiangxud/data/LD_WGS_demo/M12449_3X_1.fq.gz	/gpfs/hpc/home/lijc/xiangxud/data/LD_WGS_demo/M12449_3X_1.fq.gz
+M13395	S	/gpfs/hpc/home/lijc/xiangxud/data/LD_WGS_demo/M13395_3X_1.fq.gz	/gpfs/hpc/home/lijc/xiangxud/data/LD_WGS_demo/M13395_3X_1.fq.gz
+
+
+
+# NA12878 5X
+# NA12878	S	/data/xiangxd/database/data/NA12878/SRR622461_5X/pre_process/bams/NA12878.ready.bam
+# NA128781	S	/data/xiangxd/database/data/NA12878/SRR622461_5X/NA12878_R1.fastq	/data/xiangxd/database/data/NA12878/SRR622461_5X/NA12878_R2.fastq
+
+# NA12878 30X
+# NA12878	S	/data/xiangxd/database/data/NA12878/ERP001229_13X/pre_process/bam/NA12878.ready.bam
+# NA12878	S	/data/xiangxd/database/data/NA12878/ERP001229_13X/ERR091571_1.fastq.gz	/data/xiangxd/database/data/NA12878/ERP001229_13X/ERR091571_2.fastq.gz
+
+# WGS 3X 数据
+# M15147	S	/data/xiangxd/database/data/low_WGS/pre_process/bams/M15147.ready.bam
+# M15199	S	/data/xiangxd/database/data/low_WGS/pre_process/bams/M15199.ready.bam
+# M16087	S	/data/xiangxd/database/data/low_WGS/pre_process/bams/M16087.ready.bam
+# M12449	S	/data/xiangxd/database/data/low_WGS/pre_process/bams/M12449.ready.bam
+# M16229	S	/data/xiangxd/database/data/low_WGS/pre_process/bams/M16229.ready.bam
+
+
+# PD WGS 30X BAM
+# XH1006	S	/data/xiangxd/database/data/PD_WGS_30x/XH1006.sort.mkdup.realign.bam
+# XH1029	S	/data/xiangxd/database/data/PD_WGS_30x/XH1029.sort.mkdup.realign.bam
+# XH1047	S	/data/xiangxd/database/data/PD_WGS_30x/XH1047.sort.mkdup.realign.bam
+# XH1051	S	/data/xiangxd/database/data/PD_WGS_30x/XH1051.sort.mkdup.realign.bam
+# XH1068	S	/data/xiangxd/database/data/PD_WGS_30x/XH1068.sort.mkdup.realign.bam
+# XH1071	S	/data/xiangxd/database/data/PD_WGS_30x/XH1071.sort.mkdup.realign.bam
+# XH1144	S	/data/xiangxd/database/data/PD_WGS_30x/XH1144.sort.mkdup.realign.bam
+# XH1147	S	/data/xiangxd/database/data/PD_WGS_30x/XH1147.sort.mkdup.realign.bam
+# XH1160	S	/data/xiangxd/database/data/PD_WGS_30x/XH1160.sort.mkdup.realign.bam
+# XH1165	S	/data/xiangxd/database/data/PD_WGS_30x/XH1165.sort.mkdup.realign.bam
+# XH1166	S	/data/xiangxd/database/data/PD_WGS_30x/XH1166.sort.mkdup.realign.bam
+# XH1167	S	/data/xiangxd/database/data/PD_WGS_30x/XH1167.sort.mkdup.realign.bam
+# XH1183	S	/data/xiangxd/database/data/PD_WGS_30x/XH1183.sort.mkdup.realign.bam
+# XH1193	S	/data/xiangxd/database/data/PD_WGS_30x/XH1193.sort.mkdup.realign.bam
+# XH1194	S	/data/xiangxd/database/data/PD_WGS_30x/XH1194.sort.mkdup.realign.bam
+# XH1212	S	/data/xiangxd/database/data/PD_WGS_30x/XH1212.sort.mkdup.realign.bam
+# XH1229	S	/data/xiangxd/database/data/PD_WGS_30x/XH1229.sort.mkdup.realign.bam
+# XH1232	S	/data/xiangxd/database/data/PD_WGS_30x/XH1232.sort.mkdup.realign.bam
+# XH1245	S	/data/xiangxd/database/data/PD_WGS_30x/XH1245.sort.mkdup.realign.bam
+# XH1269	S	/data/xiangxd/database/data/PD_WGS_30x/XH1269.sort.mkdup.realign.bam
+# XH1277	S	/data/xiangxd/database/data/PD_WGS_30x/XH1277.sort.mkdup.realign.bam
+# XH1284	S	/data/xiangxd/database/data/PD_WGS_30x/XH1284.sort.mkdup.realign.bam
+# XH1294	S	/data/xiangxd/database/data/PD_WGS_30x/XH1294.sort.mkdup.realign.bam
+# XH1365	S	/data/xiangxd/database/data/PD_WGS_30x/XH1365.sort.mkdup.realign.bam
+# XH1378	S	/data/xiangxd/database/data/PD_WGS_30x/XH1378.sort.mkdup.realign.bam
+
+
+# PD WES BAM
+# R18001353LU01-XG1017_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001353LU01-XG1017_combined.recaled.bam
+# R18001351LU01-XG1015_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001351LU01-XG1015_combined.recaled.bam
+# R18001358LU01-XG1022_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001358LU01-XG1022_combined.recaled.bam
+# R18001357LU01-XG1021_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001357LU01-XG1021_combined.recaled.bam
+# R18001364LU01-XG1028_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001364LU01-XG1028_combined.recaled.bam
+# R18006576LU01-XG1125_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18006576LU01-XG1125_combined.recaled.bam
+# R18002110LU01-XG3351_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18002110LU01-XG3351_combined.recaled.bam
+# R18040023LU01-XG1135_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18040023LU01-XG1135_combined.recaled.bam
+# R18040024LU01-XG1136_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18040024LU01-XG1136_combined.recaled.bam
+# R18001341LU01-XG1005_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001341LU01-XG1005_combined.recaled.bam
+# R18001343LU01-XG1007_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001343LU01-XG1007_combined.recaled.bam
+# R18001344LU01-XG1008_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001344LU01-XG1008_combined.recaled.bam
+# R18001345LU01-XG1009_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001345LU01-XG1009_combined.recaled.bam
+# R18001346LU01-XG1010_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001346LU01-XG1010_combined.recaled.bam
+# R18001347LU01-XG1011_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001347LU01-XG1011_combined.recaled.bam
+# R18001348LU01-XG1012_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001348LU01-XG1012_combined.recaled.bam
+# R18001352LU01-XG1016_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001352LU01-XG1016_combined.recaled.bam
+# R18001354LU01-XG1018_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001354LU01-XG1018_combined.recaled.bam
+# R18001355LU01-XG1019_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001355LU01-XG1019_combined.recaled.bam
+# R18001356LU01-XG1020_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001356LU01-XG1020_combined.recaled.bam
+# R18001369LU01-XG1033_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001369LU01-XG1033_combined.recaled.bam
+# R18001371LU01-XG1035_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001371LU01-XG1035_combined.recaled.bam
+# R18001373LU01-XG1037_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001373LU01-XG1037_combined.recaled.bam
+# R18001375LU01-XG1039_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001375LU01-XG1039_combined.recaled.bam
+# R18001376LU01-XG1040_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001376LU01-XG1040_combined.recaled.bam
+# R18001377LU01-XG1041_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001377LU01-XG1041_combined.recaled.bam
+# R18001378LU01-XG1042_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001378LU01-XG1042_combined.recaled.bam
+# R18001379LU01-XG1043_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001379LU01-XG1043_combined.recaled.bam
+# R18001380LU01-XG1044_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001380LU01-XG1044_combined.recaled.bam
+# R18001381LU01-XG1045_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001381LU01-XG1045_combined.recaled.bam
+# R18001382LU01-XG1046_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001382LU01-XG1046_combined.recaled.bam
+# R18001383LU01-XG1047_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001383LU01-XG1047_combined.recaled.bam
+# R18001384LU01-XG1048_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001384LU01-XG1048_combined.recaled.bam
+# R18001387LU01-XG1051_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001387LU01-XG1051_combined.recaled.bam
+# R18001388LU01-XG1052_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001388LU01-XG1052_combined.recaled.bam
+# R18001389LU01-XG1053_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001389LU01-XG1053_combined.recaled.bam
+# R18001390LU01-XG1054_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001390LU01-XG1054_combined.recaled.bam
+# R18001393LU01-XG1057_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001393LU01-XG1057_combined.recaled.bam
+# R18001394LU01-XG1058_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001394LU01-XG1058_combined.recaled.bam
+# R18001396LU01-XG1060_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001396LU01-XG1060_combined.recaled.bam
+# R18001397LU01-XG1061_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001397LU01-XG1061_combined.recaled.bam
+# R18001398LU01-XG1062_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001398LU01-XG1062_combined.recaled.bam
+# R18001399LU01-XG1063_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001399LU01-XG1063_combined.recaled.bam
+# R18065358LU01-XG1143_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18065358LU01-XG1143_combined.recaled.bam
+# R18001400LU01-XG1064_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001400LU01-XG1064_combined.recaled.bam
+# R18001446LU01-XG1110_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001446LU01-XG1110_combined.recaled.bam
+# R18001405LU01-XG1069_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001405LU01-XG1069_combined.recaled.bam
+# R18001406LU01-XG1070_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001406LU01-XG1070_combined.recaled.bam
+# R18001407LU01-XG1071_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001407LU01-XG1071_combined.recaled.bam
+# R18001408LU01-XG1072_combined	S	/bak01/IH/WES_PD_zhaoyuwen/bam/R18001408LU01-XG1072_combined.recaled.bam
+
+# 吕静依家系 WES 数据
+# V300033256_95	S	/data/xiangxd/database/data/lvjy_trio/WES/pre_process/bam/V300033256_95.ready.bam
+# V300033254_96	S	/data/xiangxd/database/data/lvjy_trio/WES/pre_process/bam/V300033254_96.ready.bam
+# V300033254_97	S	/data/xiangxd/database/data/lvjy_trio/WES/pre_process/bam/V300033254_97.ready.bam
+
+# 于丽萍家系 WES 数据
+# 21Y13924	S	/data/xiangxd/database/data/WES_trio/bams/21Y13924.ready.bam
+# 21Y13924FU0	S	/data/xiangxd/database/data/WES_trio/bams/21Y13924FU0.ready.bam
+# 21Y13924MU0	S	/data/xiangxd/database/data/WES_trio/bams/21Y13924MU0.ready.bam
+
+
+# ASD BGI
+# 10X
+# SD1175_p1	S	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD1175.p1_R1.fq.gz	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD1175.p1_R2.fq.gz
+# FJ0028_p1	S	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/FJ0028.p1_R1.fq.gz	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/FJ0028.p1_R2.fq.gz
+# HN0794_p1	S	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/HN0794.p1_R1.fq.gz	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/HN0794.p1_R2.fq.gz
+# SD0651_fa	S	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD0651.fa_R1.fq.gz	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD0651.fa_R2.fq.gz
+# HN0794_fa	S	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/HN0794.fa_R1.fq.gz	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/HN0794.fa_R2.fq.gz
+# SD1236_s1	S	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD1236.s1_R1.fq.gz	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD1236.s1_R2.fq.gz
+# SD1243_s1	S	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD1243.s1_R1.fq.gz	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD1243.s1_R2.fq.gz
+# HN0761_fa	S	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/HN0761.fa_R1.fq.gz	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/HN0761.fa_R2.fq.gz
+# SD0798_p1	S	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD0798.p1_R1.fq.gz	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD0798.p1_R2.fq.gz
+# SD1123_fa	S	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD1123.fa_R1.fq.gz	/data/xiangxd/database/data/ASD_WGS/10X/fastq_raw/SD1123.fa_R2.fq.gz
+
+
+
+# WES 对照
+# XN1020_BKDN200007036-1A_H33HTDSXY_L4	C	/bak01/IH/WES_control/bam/XN1020_BKDN200007036-1A_H33HTDSXY_L4.recaled.bam
+# XN1021_BKDN200007037-1A_H33HTDSXY_L4	C	/bak01/IH/WES_control/bam/XN1021_BKDN200007037-1A_H33HTDSXY_L4.recaled.bam
+# XN1022_BKDN200007038-1A_H33HTDSXY_L1	C	/bak01/IH/WES_control/bam/XN1022_BKDN200007038-1A_H33HTDSXY_L1.recaled.bam
+# XN1023_BKDN200007039-1A_H33HTDSXY_L1	C	/bak01/IH/WES_control/bam/XN1023_BKDN200007039-1A_H33HTDSXY_L1.recaled.bam
+# XN1024_BKDN200007040-1A_H2JTLDSXY_L1	C	/bak01/IH/WES_control/bam/XN1024_BKDN200007040-1A_H2JTLDSXY_L1.recaled.bam
+# XN1025_BKDN200007041-1A_H2JTLDSXY_L1	C	/bak01/IH/WES_control/bam/XN1025_BKDN200007041-1A_H2JTLDSXY_L1.recaled.bam
+# XN1026_BKDN200007042-1A_H2JTLDSXY_L1	C	/bak01/IH/WES_control/bam/XN1026_BKDN200007042-1A_H2JTLDSXY_L1.recaled.bam
+# XN1028_BKDN200007043-1A_H2JTLDSXY_L1	C	/bak01/IH/WES_control/bam/XN1028_BKDN200007043-1A_H2JTLDSXY_L1.recaled.bam
+# XN1030_BKDN200007044-1A_H2JTLDSXY_L1	C	/bak01/IH/WES_control/bam/XN1030_BKDN200007044-1A_H2JTLDSXY_L1.recaled.bam
+# XN1031_BKDN200007045-1A_H2JTLDSXY_L1	C	/bak01/IH/WES_control/bam/XN1031_BKDN200007045-1A_H2JTLDSXY_L1.recaled.bam
+# XN1032_BKDN200007046-1A_H2JTLDSXY_L1	C	/bak01/IH/WES_control/bam/XN1032_BKDN200007046-1A_H2JTLDSXY_L1.recaled.bam
+# XN1033_BKDN200007047-1A_H2JTLDSXY_L1	C	/bak01/IH/WES_control/bam/XN1033_BKDN200007047-1A_H2JTLDSXY_L1.recaled.bam
+# XN1034_BKDN200007048-1A_H33HTDSXY_L1	C	/bak01/IH/WES_control/bam/XN1034_BKDN200007048-1A_H33HTDSXY_L1.recaled.bam
+# XN1035_BKDN200007049-1A_H2JTLDSXY_L1	C	/bak01/IH/WES_control/bam/XN1035_BKDN200007049-1A_H2JTLDSXY_L1.recaled.bam
+# XN1037_BKDN200007050-1A_H2JTLDSXY_L1	C	/bak01/IH/WES_control/bam/XN1037_BKDN200007050-1A_H2JTLDSXY_L1.recaled.bam
+# XN1038_BKDN200007051-1A_H33HTDSXY_L4	C	/bak01/IH/WES_control/bam/XN1038_BKDN200007051-1A_H33HTDSXY_L4.recaled.bam
+# XN1039_BKDN200007052-1A_H33HTDSXY_L1	C	/bak01/IH/WES_control/bam/XN1039_BKDN200007052-1A_H33HTDSXY_L1.recaled.bam
+
+# WGS对照
+# R18027795LD01-XF1177_combined	C	/bak01/IH/WGS_control/bam/R18027795LD01-XF1177_combined.recaled.bam
+# R18028424LD01-XF1806_combined	C	/bak01/IH/WGS_control/bam/R18028424LD01-XF1806_combined.recaled.bam
+# R18028481LD01-XF1863_combined	C	/bak01/IH/WGS_control/bam/R18028481LD01-XF1863_combined.recaled.bam
+# R18027851LD01-XF1233_combined	C	/bak01/IH/WGS_control/bam/R18027851LD01-XF1233_combined.recaled.bam
+# R18027956LD01-XF1338_combined	C	/bak01/IH/WGS_control/bam/R18027956LD01-XF1338_combined.recaled.bam
+# R18027959LD01-XF1341_combined	C	/bak01/IH/WGS_control/bam/R18027959LD01-XF1341_combined.recaled.bam
+# R18049238LD01-XF2380_combined	C	/bak01/IH/WGS_control/bam/R18049238LD01-XF2380_combined.recaled.bam
+# R18027982LD01-XF1364_combined	C	/bak01/IH/WGS_control/bam/R18027982LD01-XF1364_combined.recaled.bam
+# R18028287LD01-XF1669_combined	C	/bak01/IH/WGS_control/bam/R18028287LD01-XF1669_combined.recaled.bam

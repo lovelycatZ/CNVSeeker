@@ -1,0 +1,105 @@
+import os
+
+from scripts.post_process import *
+from scripts.helper import *
+
+
+# 导入配置文件执行格式转换
+configfile : f"{os.path.dirname(workflow.snakefile)}/config.yaml"
+convert_config(config)
+
+# 导入所需的变量
+HOME_DIR 		= check_dir(config["base"]["call_home_dir"]["value"])
+SAMPLE_LIST 	= config["base"]["sample_list"]["value"]
+RESULT_DIR 		= check_dir(os.path.abspath(config["base"]["result_dir"]["value"]))
+DATA_TYPE 		= config["base"]["data_type"]["value"]
+BUILD 			= config["base"]["build"]["value"]
+CHROM_STYLE 	= config["base"]["chrom_style"]["value"]
+EXOME_INTERVALS = config["base"]["exome_intervals"]["value"]
+CALL_OUTPUT_FORMAT 	= config["base"]["call_output_format"]["value"]
+REFERENCE		= config["base"]["reference"]["value"]
+INTEGRATE		= config["base"]["integrate"]["value"]
+THREADS 		= config["base"]["threads"]["value"]
+
+# conda 环境
+CONDA_ENV_DIR	= check_dir(config["envs"]["conda"]["conda_env_dir"])
+NGS_env_1 		= config["envs"]["conda"]["NGS_env_1"]
+NGS_env_2 		= config["envs"]["conda"]["NGS_env_2"]
+TGS_env_1 		= config["envs"]["conda"]["TGS_env_1"]
+TGS_env_2		= config["envs"]["conda"]["TGS_env_2"]
+ECOLE			= config["envs"]["conda"]["ECOLE"]
+gatk4 			= config["envs"]["conda"]["gatk4"]
+
+NGS_DATA_TYPE 	= DATA_TYPE.split("-")[-1] if DATA_TYPE.startswith("NGS") else None
+DATA_TYPE 		= DATA_TYPE.split("-")[0]
+CHROM_LIST 		= [f"chr{i}" for i in range(1, 23)] + ["chrX", "chrY"] if CHROM_STYLE == "l" else \
+				[f"{i}" for i in range(1, 23)] + ["X", "Y"]
+
+if DATA_TYPE.startswith("NGS"):
+	tmp_dir 		= RESULT_DIR + "0_tmp/"
+	benchmark_dir   = RESULT_DIR + "0_benchmark/"
+	logs_dir		= RESULT_DIR + "0_logs/"
+	fastq_raw_dir 	= RESULT_DIR + "1_fastq_raw/"
+	fastq_qced_dir 	= RESULT_DIR + "1_fastq_qced/"
+	bam_dir 		= RESULT_DIR + "2_bam/"
+	tools_vcf_dir 	= RESULT_DIR + "3_tools_vcf/"
+	merged_vcf_dir 	= RESULT_DIR + "4_merged_vcf/"
+	final_dir 		= RESULT_DIR + "final_result/"
+
+	DF_BAM, DF_FQ, DF_SEX = parse_sample_list_NGS(config["base"]["sample_list"]["value"], tmp_dir)
+	SAMPLES = list(DF_BAM.index) + list(DF_FQ.index)
+	SAMPLES_S = list(DF_BAM[DF_BAM["tag"] == "S"].index) + list(DF_FQ[DF_FQ["tag"] == "S"].index)
+	SAMPLES_C = list(DF_BAM[DF_BAM["tag"] == "C"].index) + list(DF_FQ[DF_FQ["tag"] == "C"].index)
+	bam_samples = list(DF_BAM[DF_BAM["bam"].str.endswith(".bam")].index)
+	cram_samples = list(DF_BAM[DF_BAM["bam"].str.endswith(".cram")].index)
+	fq_samples = list(DF_FQ[DF_FQ["fq_r1"].str.endswith((".fq", ".fastq"))].index)
+	fq_gz_samples = list(DF_FQ[DF_FQ["fq_r1"].str.endswith((".fq.gz", ".fastq.gz"))].index)
+	TOOLS = config["used_callers"]["NGS"][NGS_DATA_TYPE]
+
+else:
+	benchmark_dir   = RESULT_DIR + "0_benchmark/"
+	logs_dir		= RESULT_DIR + "0_logs/"
+	fastq_dir 	    = RESULT_DIR + "1_fastq_raw/"
+	fastq_qced_dir 	= RESULT_DIR + "1_fastq_qced/"
+	ccs_bam_dir     = RESULT_DIR + "1_ccs_bam/"
+	assmb_fasta_dir = RESULT_DIR + "1_assmb_fasta/"
+	bam_dir 		= RESULT_DIR + "2_bam/"
+	tools_vcf_dir 	= RESULT_DIR + "3_tools_vcf/"
+	merged_vcf_dir 	= RESULT_DIR + "4_merged_vcf/"
+	final_dir 		= RESULT_DIR + "final_result/"
+
+	DF = parse_sample_list_TGS(config["base"]["sample_list"]["value"])
+	SAMPLES = DF.index
+	bam_samples = list(DF[DF["file"].str.endswith(".bam") & ~DF["file"].str.endswith(".ccs.bam")].index)
+	cram_samples = list(DF[DF["file"].str.endswith(".cram")].index)
+	fq_samples = list(DF[DF["file"].str.endswith((".fq", ".fastq"))].index)
+	fq_gz_samples = list(DF[DF["file"].str.endswith((".fq.gz", ".fastq.gz"))].index)
+	fa_samples = list(DF[DF["file"].str.endswith((".fa", ".fasta"))].index)
+	fa_gz_samples = list(DF[DF["file"].str.endswith((".fa.gz", ".fasta.gz"))].index)
+	ccs_bam_samples = list(DF[DF["file"].str.endswith(".ccs.bam")].index)
+	TOOLS = []
+	if fa_samples + fa_gz_samples:
+		TOOLS += config["used_callers"][DATA_TYPE]["assembly_based"]
+	if bam_samples + cram_samples + fq_samples + fq_gz_samples + ccs_bam_samples:
+		TOOLS += config["used_callers"][DATA_TYPE]["align_based"]
+
+TOOLS_DIR_DICT = make_dir_dict(TOOLS, tools_vcf_dir)
+
+
+wildcard_constraints:
+	sample 	 = "|".join(SAMPLES),
+	platform = "|".join(["pb-hifi", "pb-clr", "ont"]),
+	aligner  = "|".join(["minimap2", "ngmlr", "pbmm2", "winnowmap", "minimap2-asm"])
+
+
+include: f"rules/utils_{DATA_TYPE}.py"
+include: f"rules/pre_process_{DATA_TYPE}.py"
+include: f"rules/merge_callsets_{DATA_TYPE}.py"
+for tool in TOOLS:
+	include: f"rules/{tool}.py"
+
+
+rule all:
+	input:
+		out_files = get_final_out()
+	message: "============================ pipeline complete ============================"

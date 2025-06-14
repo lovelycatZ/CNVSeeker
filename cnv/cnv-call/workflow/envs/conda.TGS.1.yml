@@ -1,0 +1,30 @@
+name: TGS_env_1
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bcftools>=1.9
+  - bedtools=2.31.1
+  - cutesv=2.1.1
+  - filtlong=0.2.1
+  - meryl=1.4.1
+  - minimap2>=2.19
+  - ngmlr=0.2.7
+  - numpy=1.26.4
+  - pbmm2=1.14.99
+  - pbsv=2.9.0
+  - pbtk=3.1.1
+  - pip=24.0
+  - python=3.10.14
+  - pyvcf=0.6.8
+  - pyvcf3=1.0.3
+  - samtools=1.20
+  - sniffles=2.4
+  - survivor=1.0.7
+  - svim=2.0.0
+  - svim-asm=1.0.3
+  - winnowmap=2.03
+  - pip:
+    - nanovar==1.7.0
+    - tensorflow-cpu==2.15.1

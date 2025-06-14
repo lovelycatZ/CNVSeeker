@@ -1,0 +1,4 @@
+ *.py filter=_line
+ *.smk filter=_line
+ *.yml filter=_line
+ *.yaml filter=_line

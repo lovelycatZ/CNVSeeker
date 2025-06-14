@@ -1,0 +1,45 @@
+from snakemake.utils import min_version
+import os
+
+include: 'rules/common.smk'
+
+min_version("6.0")
+
+
+# configfile: "config/config.yaml"
+# convert_config(config)
+
+
+## load modules
+# cnv_call module
+module cnv_call:
+    snakefile:
+        "../../cnv-call/workflow/Snakefile"
+    config: config
+    prefix: "cnv-call"
+
+use rule * from cnv_call exclude all as cnv_call_*
+
+# cnv_inter module
+module cnv_inter:
+    snakefile:
+        "../../cnv-inter/workflow/Snakefile"
+    config: config
+    prefix: "cnv-inter"
+
+use rule * from cnv_inter exclude all as cnv_inter_*
+
+
+SAMPLES = cnv_call.SAMPLES_S
+INTER_OUTPUT_FORMAT = cnv_inter.INTER_OUTPUT_FORMAT
+
+use rule link_input_file from cnv_inter as cnv_inter_link_input_file with:
+    input:
+        rules.cnv_call_add_id.output
+
+
+## default target
+rule all:
+    input:
+        expand(cnv_inter.final_dir + "{{sample}}.{output_format}".format(output_format = INTER_OUTPUT_FORMAT), sample = SAMPLES)
+    default_target: True

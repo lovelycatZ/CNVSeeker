@@ -1,0 +1,21 @@
+name: interpret_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  # - ensembl-vep=112.0
+  - fastapi=0.115.6
+  - pip=24.0
+  - pysam=0.22.1
+  - python=3.11.9
+  - samtools=1.20
+  - pip:
+      # - autopvs1-batch==2.0
+      - crossmap==0.7.3
+      - loguru==0.7.3
+      - numpy==1.26.4
+      - pandas==2.2.2
+      - pyfaidx==0.8.1.2
+      - six==1.16.0
+      - tqdm==4.67.1

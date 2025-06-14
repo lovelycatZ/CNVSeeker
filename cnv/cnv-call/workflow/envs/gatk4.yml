@@ -1,0 +1,10 @@
+name: gatk4
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - gatk4=4.3.0.0
+  - gcnvkernel=0.8
+  - pip=21.3.1
+  - python=3.6.10

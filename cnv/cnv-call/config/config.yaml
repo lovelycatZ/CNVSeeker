@@ -1,0 +1,409 @@
+### Config file for CNV calling
+
+cnv_call_home: /gpfs/hpc/home/lijc/xiangxud/project/cnvseeker/cnv/cnv-call
+resource_dir: /gpfs/hpc/home/lijc/xiangxud/project/resources
+software_dir: ${resource_dir}/software
+
+
+
+#### 基本环境配置
+envs:
+  ## conda 配置
+  conda:
+    conda_env_dir: /gpfs/hpc/home/lijc/xiangxud/software/miniconda/envs
+    NGS_env_1: NGS_env_1
+    NGS_env_2: NGS_env_2
+    TGS_env_1: TGS_env_1
+    TGS_env_2: TGS_env_2
+    ECOLE: ecole_env
+    gatk4: gatk4
+
+
+
+bin:
+  gridss_jar: ${software_dir}/gridss-2.13.2.jar
+
+  picard_jar: ${software_dir}/picard_2.27.5.jar
+
+  SVision_pro: ${software_dir}/SVision-pro/SVision-pro
+
+  SVDSS: ${software_dir}/SVDSS_linux_x86-64
+
+
+
+## CNV检测工具
+used_callers: &used_callers
+  NGS:
+    WES: [cn.mops, ExomeDepth, xhmm, gatk4, ECOLE]
+    # LD_WGS: [CNVpytor, cn.mops, ControlFREEC, gatk4, Wham, lumpy, gridss]
+    LD_WGS: [gridss]
+    HD_WGS: [CNVpytor, cn.mops, ControlFREEC, gatk4, delly, Wham, lumpy]
+
+  TGS:
+    align_based: [cuteSV, SVision_pro, Sniffles, NanoVar, DeBreak, pbsv]
+    assembly_based: [SVIM_asm, SVDSS]
+
+
+
+####################### 以下参数可以在命令行中配置和修改 ######################
+#### 命令分成三大类：snakemake、base、tools
+##   1、snakemake：snakemake 的参数
+##   2、base: cnvseeker 自身的参数（比如基本的输入、输出设置，线程数设置等）
+##   3、tools：snakemake 里的 rule 使用到的工具的参数
+
+##### 指定可以通过命令行配置的参数
+## 如果所有参数都可以设置，则设为 'all'，否则用列表给出具体可以设置的参数
+cmd_arguments:
+  base: [sample_list, result_dir, data_type, build, chrom_style, exome_intervals, call_output_format, reference, threads]
+  snakemake: all  # snakemake 强制可以配置
+  tools: all
+  # tools: [bwa, fastp, samtools, sambamba, SURVIVOR, jasmine, CNVpytor, CNVcaller, cn_mops, MOPline, gatk4, TGS_caller_filter_options, SVision_pro, Sniffles, SVDSS]
+
+
+########################################################################
+## base: CNVSeeker 自身的参数，只局限于以下参数的设置                    ##
+########################################################################
+base:
+  call_home_dir: 
+    arg_name: --call-home-dir
+    type: str
+    required: False
+    value: ${cnv_call_home}
+    help: "the home directory of CNV calling module [default: ${cnv_call_home}]"
+
+  sample_list: 
+    arg_name: --sample-list
+    type: str
+    required: True
+    value: ${base.call_home_dir.value}/sample.list.TGS
+    help: "sample list file. Please refer to the notes in sample.list.* for details [mandatory]"
+  
+  result_dir: 
+    arg_name: --result-dir
+    type: str
+    required: True
+    value: /gpfs/hpc/home/lijc/xiangxud/project/test/new_pipline_test
+    help: "the output directory of CNVSeeker [mandatory]"
+
+  data_type:
+    arg_name: --data-type
+    type: str
+    required: True
+    choices:
+      - TGS
+      - NGS-WES
+      - NGS-LD_WGS
+      - NGS-HD_WGS
+    value: TGS
+    help: "sequencing type of NGS data. NGS high depth WGS (NGS-HD_WGS), NGS low depth WGS (NGS-LD_WGS), NGS WES (NGS-WES), or TGS [mandatory]"
+
+  build:
+    arg_name: --build
+    arg_short_name: -b
+    type: str
+    required: True 
+    choices:
+      - hg19
+      - hg38
+      - T2T
+    value: hg38
+    help: "the reference genome version [hg19, hg38, T2T] [mandatory]"
+
+  chrom_style:
+    arg_name: --chrom-style
+    type: str
+    required: True 
+    choices:
+      - l
+      - s
+    value: l
+    help: "the style of chromosome IDs. 'l' = 'long style' (eg. 'chr1', 'chrX'); 's' = 'short style' (eg. '1', 'X'). [mandatory]"
+
+  exome_intervals:
+    arg_name: --exome-intervals
+    type: str
+    required: False
+    value: ${resource_dir}/call_datasets/exons.bed
+    help: "exome capture intervals in bed format for WES data. It must be in bed format and no header (1st column: chromosome number, 2nd column: start site-1, 3rd column: end site) [mandatory if WES]"
+
+  call_output_format:
+    arg_name: --call-output-format
+    type: str 
+    required: False
+    choices:
+      - cram
+      - bam
+      - vcf
+      - bed
+    value: vcf
+    help: "output file format for CNV calling [default: vcf]"
+
+  reference: 
+    arg_name: --reference
+    arg_short_name: -ref
+    type: str
+    required: False
+    value: ${resource_dir}/call_datasets/ref_genome/hg38/hg38.fa
+    help: "the reference genome in fasta format [default: ${resource_dir}/call_datasets/ref_genome/hg38/hg38.fa]"
+  
+  black_list:
+    arg_name: --black-list
+    type: str
+    required: False
+    value: ${resource_dir}/call_datasets/black_list/blacklist.${base.build.value}.bed
+    help: "the black list file in bed format [default: ${resource_dir}/call_datasets/blacklist/blacklist.hg38.bed]"
+  
+  gap:
+    arg_name: --gap
+    type: str
+    required: False
+    value: ${resource_dir}/call_datasets/gaps/gap.${base.build.value}.bed
+    help: "the gap file in bed format [default: ${resource_dir}/call_datasets/genome_gaps/gap.hg38.bed]"
+
+  threads: 
+    arg_name: --threads
+    arg_short_name: -t
+    type: int
+    required: False
+    value: 8
+    help: "number of threads for each rule [default: 8]"
+
+  integrate:
+    arg_name: --integrate
+    action: 'store_true'
+    required: False
+    value: False
+    help: "whether to integrate whole pipline [default: False]"
+############################## base END ################################
+
+
+
+########################################################################
+## snakemake：snakemake 的参数                                         ##
+## - 补充说明：snakemake 的参数可在命令行当中自行添加扩展，不局限于以下参数 ##
+########################################################################
+snakemake:
+  arg_name: --snakemake
+  arg_short_name: -smk
+  type: str
+  help: "naive arguments provided to snakemake"
+  params:
+    snakefile:
+      arg_name: --snakefile
+      arg_short_name: -s
+      type: str
+      value: ${base.call_home_dir.value}/workflow/Snakefile
+    
+    cores:
+      arg_name: --cores
+      arg_short_name: -c
+      type: int
+      value: 10
+    
+    jobs:
+      arg_name: --jobs
+      arg_short_name: -j
+      type: int
+      value: 20
+
+    directory:
+      arg_name: --directory
+      arg_short_name: -d
+      type: str
+      value: ${base.result_dir.value}
+
+    use_conda:
+      arg_name: --use-conda
+      type: bool
+      value: True
+
+    dry_run:
+      arg_name: --dry-run
+      arg_short_name: -n
+      type: bool
+      value: False
+############################ snakemake END ############################
+
+
+
+#######################################################################
+## tools：rule 当中使用到的工具的参数                                  ##
+## - 补充说明: 括 callers 等工具                                      ##
+#######################################################################
+tools:
+  fastp:
+    arg_name: --fastp
+    params:
+      -z: 4
+      -V: False
+      -A: False
+      -f: 0
+      -t: 0
+      -b: 0
+      -F: 0
+      -T: 0
+      -B: 0
+      -Q: False
+      -q: 15
+      -u: 40 
+      -n: 5
+      -e: 0
+      -L: True
+      -l: 15
+      -y: False
+      -Y: 30
+      -w: ${base.threads.value}
+      --reads_to_process: 0 
+      --cut_front_window_size: 4
+      --cut_front_mean_quality: 20
+      --cut_tail_window_size: 4
+      --cut_tail_mean_quality: 20
+      --cut_front: False
+      --cut_tail: False
+    help: "naive arguments of fastp. Please refer to help page of fastp and provided in a string like this: -z=4,--reads_to_process=0,-A"
+
+  bwa:
+    arg_name: --bwa
+    params:
+      -t: ${base.threads.value}
+      -k: 19
+      -p: False
+      -q: False
+      -K: 10000000
+      -v: 3
+      -T: 30
+      -a: False 
+      -C: False 
+      -V: False 
+      -Y: False
+      -M: True
+      -u: False
+
+  sambamba:
+    arg_name: --sambamba
+    params:
+      -r: False
+      -t: ${base.threads.value}
+      -l: 3
+      -p: False
+      --tmpdir:
+      --hash-table-size: 262144
+      --overflow-list-size: 600000
+      --sort-buffer-size: 2048
+      --io-buffer-size: 128 
+
+  SURVIVOR:
+    arg_name: --survivor
+    params:
+      --breakpoint_dist: 0.5
+      --min_support_callers: 1
+      --same_type: 1
+      --same_strand: 1
+      --dist_based: 0
+      --min_sv_size: 50
+
+  CNVpytor:
+    arg_name: --cnvpytor
+    params:
+      --window_size: 3000
+      --q0: 0.5
+      --p1: 0.01
+      # p2: 0.01
+      --convertor: ${cnv_call_home}/workflow/scripts/pytor2vcf.py
+
+  ControlFREEC:
+    arg_name: --controlfreec
+    params:
+      --chr_len: ${base.reference.value}.fai
+      --window_size: 3000
+
+  ECOLE:
+    arg_name: --ecole
+    params:
+      --normalize_data: ${resource_dir}/software/ECOLE/ecole_stats.txt
+    bin:
+      --preprocess_sample: ${resource_dir}/software/ECOLE/scripts/my_preprocess_sample.py
+      --ecole_call: ${resource_dir}/software/ECOLE/scripts/my_ECOLE_call.py
+      
+  cn_mops:
+    arg_name: --cn_mops
+    params:
+      --window_size: 3000
+
+  delly:
+    arg_name: --delly
+    params:
+      --excl_hg38: ${resource_dir}/call_datasets/delly_excl/human.hg38.excl.tsv
+      --excl_hg39: ${resource_dir}/call_datasets/delly_excl/human.hg19.excl.tsv
+
+  lumpy:
+    arg_name: --lumpy
+    params:
+      --excl_hg38: ${resource_dir}/call_datasets/lumpy_excl/hg38.excl.bed
+      --excl_hg39: ${resource_dir}/call_datasets/lumpy_excl/hg19.excl.bed
+
+  xhmm:
+    arg_name: --xhmm
+    params:
+      --options: ${resource_dir}/call_datasets/xhmm_params.txt
+    #   --seqdb: ${resource_dir}/call_datasets/seqdb.hg38
+    # bin:
+    #   --pseq: ${bin.plinkseq}
+
+  gatk4:
+    arg_name: --gatk4
+    params:
+      --scatter_count: 50
+      --window_size: 3000
+      --padding_size: 250
+      --ploidy_priors_long_chr: ${resource_dir}/call_datasets/gatk_ploidy/gatk4_contig_ploidy_prior_long_chr.tsv
+      --ploidy_priors_short_chr: ${resource_dir}/call_datasets/gatk_ploidy/gatk4_contig_ploidy_prior_short_chr.tsv
+      --known_sites_1_hg38: ${resource_dir}/call_datasets/BQSR_known_sites/dbsnp_138.hg38.vcf.gz
+      --known_sites_2_hg38: ${resource_dir}/call_datasets/BQSR_known_sites/1000G_phase1.snps.high_confidence.hg38.vcf.gz
+      --known_sites_1_hg19: ${resource_dir}/call_datasets/BQSR_known_sites/dbsnp_138.hg19.vcf.gz
+      --known_sites_2_hg19: ${resource_dir}/call_datasets/BQSR_known_sites/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz
+
+  # TGS  
+  TGS_caller_filter_options:
+    arg_name: --TGS-caller-filter-options
+    params:
+      --min_support: 1
+      --min_size: 50
+      --max_size: 50000000
+    help: "min_support: minimum number of supporting read for a SV to be reported; min_size: minimum SV length to be reported; max_size: maximum SV length to be reported;"
+
+  filtlong:
+    arg_name: --filtlong
+    params:
+      --target_bases: 500000000
+      --keep_percent: 90
+      --min_length: 1000
+      --max_length:
+      --min_mean_q: 
+      --min_window_q:
+      --length_weight: 1
+      --mean_q_weight: 1
+      --window_q_weight: 1
+      --window_size: 250
+
+  SVision_pro:
+    arg_name: --svision-pro
+    params:
+      --model: ${software_dir}/SVision-pro/src/pre_process/model_liteunet_256_8_16_32_32_32.pth
+      --access_bed: ${software_dir}/SVision-pro/src/pre_process/hg38.access.10M.bed
+    bin:
+      ${bin.SVision_pro}
+
+  Sniffles:
+    arg_name: --sniffles
+    params:
+      --tandem_repeats_hg38: ${resource_dir}/call_datasets/sniffles_tandem_repeats/human_GRCh38_no_alt_analysis_set.trf.bed
+      --tandem_repeats_hg19: ${resource_dir}/call_datasets/sniffles_tandem_repeats/human_hg19.trf.bed
+      --tandem_repeats_T2T: ${resource_dir}/call_datasets/sniffles_tandem_repeats/human_chm13v2.0_maskedY_rCRS.trf.bed
+
+  SVDSS:
+    arg_name: --svdss
+    params:
+    bin:
+      ${bin.SVDSS}
+############################# tools END ###############################

@@ -1,0 +1,7 @@
+from cli.init_data import cmd_config
+from cli.args.argument import get_argumets_from_config
+
+
+cnv_call_args, cnv_call_args_keychain_map = get_argumets_from_config(cmd_config.cnv_call_config)
+cnv_inter_args, cnv_inter_args_keychain_map = get_argumets_from_config(cmd_config.cnv_inter_config)
+cnv_call_inter_args, cnv_call_inter_args_keychain_map = get_argumets_from_config(cmd_config.cnv_call_inter_config)
