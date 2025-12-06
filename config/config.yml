@@ -1,0 +1,22 @@
+---
+Name: CNVSeeker
+Version: 1.0
+BASE_DIR: /gpfs/hpc/home/lijc/xiangxud/project/cnvseeker
+
+#### global variable
+CNV_DIR: "${BASE_DIR}/cnv"
+CNV-CALL: cnv-call
+CNV-INTER: cnv-inter
+CNV-CALL-INTER: cnv-call-inter
+
+# config helper 命令（非 pipeline）
+CONF_HELPER: config
+
+#### 配置文件 config file
+# 全局配置文件
+global_config: "${BASE_DIR}/config/config.yml"
+
+# CNV 相关命令配置文件
+cnv_call_config: "${BASE_DIR}/cnv/${CNV-CALL}/config/config.yaml"
+cnv_inter_config: "${BASE_DIR}/cnv/${CNV-INTER}/config/config.yaml"
+cnv_call_inter_config: "${BASE_DIR}/cnv/${CNV-CALL-INTER}/config/config.yaml"

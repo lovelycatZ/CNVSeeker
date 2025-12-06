@@ -1,0 +1,80 @@
+from scripts.helper import *
+import os
+
+include: "scripts/helper.py" 
+
+# 导入配置文件执行格式转换
+configfile: f"{os.path.dirname(workflow.snakefile)}/config.yaml"
+convert_config(config)
+
+
+# 导入所需变量
+HOME_DIR 		 	= check_dir(config["base"]["inter_home_dir"]["value"])
+INPUT_DIR 		 	= check_dir(config["base"]["inter_input_dir"]["value"])
+RESULT_DIR 		 	= check_dir(config["base"]["result_dir"]["value"])
+BUILD 			 	= config["base"]["build"]["value"]
+INTER_OUTPUT_FORMAT = config["base"]["inter_output_format"]["value"]
+THREADS 		 	= config["base"]["threads"]["value"]
+INTEGRETE		 	= config["base"]["integrate"]["value"]
+
+# conda 环境
+CONDA_ENV 			= config["envs"]["conda"]["interpret_env"]
+
+
+if INTEGRETE:
+	interpret_dir = RESULT_DIR + "5_interpret/"
+else:
+	interpret_dir = RESULT_DIR + "1_interpret/"
+
+benchmark_dir = RESULT_DIR + "0_benchmark/"
+logs_dir = RESULT_DIR + "0_logs/"
+final_dir = RESULT_DIR + "final_result/"
+
+(SAMPLES, SUFFIXS) = glob_wildcards(INPUT_DIR + "/{sample}.{suffix}")
+SAMPLES, SUFFIXS = filt_wildcards(SAMPLES, SUFFIXS)
+
+
+rule all:
+	input:
+		expand(final_dir + "{{sample}}.{output_format}".format(output_format = INTER_OUTPUT_FORMAT), sample = SAMPLES)
+
+
+rule link_input_file:
+	input:
+		file = lambda wildcards: INPUT_DIR + "{sample}.{suffix}".format(sample = wildcards.sample, suffix = SUFFIXS[SAMPLES.index(wildcards.sample)])
+	output:
+		bed = interpret_dir + "input/{sample}.ready.bed"
+	benchmark: benchmark_dir + "interpret/link_input_file/{sample}.log"
+	run:
+		if input[0].endswith(".vcf"):
+			vcf2bed(input[0], output[0])
+		else:
+			if not os.path.islink(output[0]):
+				os.symlink(input[0], output[0])
+
+
+rule interpret:
+	input:
+		bed = interpret_dir + "input/{sample}.ready.bed"
+	output:
+		report = interpret_dir + "output/{{sample}}.{output_format}".format(output_format = INTER_OUTPUT_FORMAT)
+	params:
+		script = HOME_DIR + "workflow/scripts/cnvseeker.py",
+		build = BUILD
+	conda: CONDA_ENV
+	benchmark: benchmark_dir + "interpret/interpret/{sample}.log"
+	log: logs_dir + "interpret/{sample}.log"
+	threads: THREADS
+	shell:
+		"(python {params.script} -i {input.bed} -b {params.build} -o {output.report}; "
+		") > {log} 2>&1"
+
+
+rule out_file:
+	input:
+		report = interpret_dir + "output/{{sample}}.{output_format}".format(output_format = INTER_OUTPUT_FORMAT)
+	output:
+		report = final_dir + "{{sample}}.{output_format}".format(output_format = INTER_OUTPUT_FORMAT)
+	benchmark: benchmark_dir + "interpret/out_file/{sample}.log"
+	shell:
+		"cp {input.report} {output.report}"

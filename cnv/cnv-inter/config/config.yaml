@@ -1,0 +1,145 @@
+cnv_inter_home: /gpfs/hpc/home/lijc/xiangxud/project/cnvseeker/cnv/cnv-inter
+resource_dir: /gpfs/hpc/home/lijc/xiangxud/project/resources
+
+
+envs:
+  conda: 
+    interpret_env: interpret_env
+
+
+
+####################### 以下参数可以在命令行中配置和修改 ######################
+#### 命令分成三大类：snakemake、base、tools
+##   1、snakemake：snakemake 的参数
+##   2、base: cnv-inter 自身的参数（比如基本的输入、输出设置，线程数设置等）
+##   3、tools：snakemake 里的 rule 使用到的工具的参数
+
+##### 指定可以通过命令行配置的参数
+## 如果所有参数都可以设置，则设为 'all'，否则用列表给出具体可以设置的参数
+cmd_arguments:
+  base: [inter_input_dir, result_dir, inter_output_format, build, threads]
+  snakemake: all  # snakemake 强制可以配置
+  tools: all
+
+
+########################################################################
+## base: CNV-inter 自身的参数，只局限于以下参数的设置                    ##
+########################################################################
+base:
+  ## 基本的路径和文件信息
+  inter_home_dir:
+    arg_name: --inter-home-dir
+    type: str
+    required: False
+    value: ${cnv_inter_home}
+    help: "the home directory of CNV interpretation module [default: ${cnv_inter_home}]"
+
+  inter_input_dir: 
+    arg_name: --inter-input-dir
+    arg_short_name: -i
+    type: str
+    required: True
+    value: /data/xiangxd/project/test/ASD_10X/merged_callsets/output
+    help: "CNV interpretation input directory [mandatory]"
+
+  result_dir: 
+    arg_name: --result-dir
+    arg_short_name: -d
+    type: str
+    required: True
+    value: /data/xiangxd/project/test/cnv_inter_demo
+    help: "output directory [mandatory]"
+
+  inter_output_format:
+    arg_name: --inter-output-format
+    arg_short_name: -if
+    type: str 
+    required: False
+    choices:
+      - txt
+      - tsv
+      - csv
+    value: tsv
+    help: "output file format for CNV interpreting [default: tsv]"
+
+  build:
+    arg_name: --build
+    arg_short_name: -b
+    type: str
+    required: True 
+    choices:
+      - hg19
+      - hg38
+      - T2T
+    value: hg38
+    help: "the reference genome version [hg19, hg38, T2T] [mandatory]"
+
+  threads:
+    arg_name: --threads
+    arg_short_name: -t
+    type: int
+    required: False
+    value: 3
+    help: "number of threads for each rule [default: 8]"
+
+  integrate:
+    arg_name: --integrate
+    action: 'store_true'
+    required: False
+    value: False
+    help: "whether to integrate whole pipline [default: False]"
+############################## base END ################################
+
+
+########################################################################
+## snakemake：snakemake 的参数                                         ##
+## - 补充说明：snakemake 的参数可在命令行当中自行添加扩展，不局限于以下参数 ##
+########################################################################
+snakemake:
+  arg_name: --snakemake
+  arg_short_name: -smk
+  type: str
+  help: the arguments provided to snakemake
+  params:
+    snakefile:
+      arg_name: --snakefile
+      arg_short_name: -s
+      type: str
+      value: ${base.inter_home_dir.value}/workflow/Snakefile
+      
+    cores:
+      arg_name: --cores
+      arg_short_name: -c
+      type: int
+      value: 8
+    
+    jobs:
+      arg_name: --jobs
+      arg_short_name: -j
+      type: int
+      value: 20
+
+    directory:
+      arg_name: --directory
+      arg_short_name: -d
+      type: str
+      value: ${base.result_dir.value}
+
+    use_conda:
+      arg_name: --use-conda
+      type: bool
+      value: True
+
+    dry_run:
+      arg_name: --dry-run
+      arg_short_name: -n
+      type: bool
+      value: False  
+############################ snakemake END ############################
+
+
+#######################################################################
+## tools：rule 当中使用到的工具的参数                                  ##
+## - 补充说明: 括 callers 等工具                                      ##
+#######################################################################
+tools:

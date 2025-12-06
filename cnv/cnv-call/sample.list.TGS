@@ -1,0 +1,22 @@
+###############################################################################################
+#                                         NOTE                                                #
+#  1. For the 1st column, you should provide sample id. It is recommended giving the id that  #
+#     is consistent with SM tag in BAM header if bam/cram sample.                             #
+#  2. For the 2nd column, you should provide platform info. pb-clr, pb-hifi, ont are allowed. #
+#  3. For the 3rd column, you should provide the absolute path of sample. Various sample type #
+#     are allowed such as fastq, assembly fasta, bam, cram.                                   #
+#  4. Mixed input types are allowed.                                                          #
+#  5. Non-sample line must be starts with "#".                                                #
+#  6. Various file suffix are allowed such as fq, fq.gz, fastq, fastq.gz, fa, fa.gz, fasta,   #
+#     fasta.gz, bam, cram.                                                                    #
+###############################################################################################
+
+# sample_id	platform	file
+# s1	pb-clr	s1.fq.gz/s1.fq/s1.fastq/s1.fastq.gz
+# s2	pb-hifi	s2.bam
+# s3	pb-hifi	s3.cram
+# s5	ont	s5.assmb.fa/s5.assmb.fa.gz/s5.assmb.fasta/s5.assmb.fasta.gz
+
+# test	pb-hifi	/gpfs/hpc/home/lijc/xiangxud/tmp/flye_test/assembly.fasta
+HB0016_fa	pb-hifi	/gpfs/hpc/home/lijc/xiangxud/tmp/SVDSS_test/HB0016_fa.ccs.bam.2w.fastq
+#HG002	pb-hifi	/gpfs/hpc/home/lijc/xiangxud/software/SVision-pro/src/pre_process/demo.HG002.child.bam
