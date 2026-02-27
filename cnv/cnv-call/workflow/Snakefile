@@ -86,9 +86,18 @@ wildcard_constraints:
 	aligner  = "|".join(["minimap2", "minimap2-asm"])
 
 
-include: f"rules/utils_{DATA_TYPE}.py"
-include: f"rules/pre_process_{DATA_TYPE}.py"
-include: f"rules/merge_callsets_{DATA_TYPE}.py"
+# include: f"rules/utils_{DATA_TYPE}.py"
+# include: f"rules/pre_process_{DATA_TYPE}.py"
+# include: f"rules/merge_callsets_{DATA_TYPE}.py"
+if DATA_TYPE.startswith("NGS"):
+	include: f"rules/utils_NGS.py"
+	include: f"rules/pre_process_NGS.py"
+	include: f"rules/merge_callsets_NGS.py"
+else:
+	include: f"rules/utils_TGS.py"
+	include: f"rules/pre_process_TGS.py"
+	include: f"rules/merge_callsets_TGS.py"
+	
 for tool in TOOLS:
 	include: f"rules/{tool}.py"
 
