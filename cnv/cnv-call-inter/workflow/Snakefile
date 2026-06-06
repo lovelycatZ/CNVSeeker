@@ -29,8 +29,11 @@ module cnv_inter:
 
 use rule * from cnv_inter exclude all as cnv_inter_*
 
+if cnv_call.DATA_TYPE.startswith("NGS"):
+    SAMPLES = cnv_call.SAMPLES_S
+else:
+    SAMPLES = cnv_call.SAMPLES
 
-SAMPLES = cnv_call.SAMPLES_S
 INTER_OUTPUT_FORMAT = cnv_inter.INTER_OUTPUT_FORMAT
 
 use rule link_input_file from cnv_inter as cnv_inter_link_input_file with:

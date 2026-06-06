@@ -69,7 +69,7 @@ rule merge_respective:
 		# combo = lambda wildcards: combo_dict[NGS_DATA_TYPE][wildcards.cnv_type][wildcards.bin_tag],
 		combo = lambda wildcards: get_combo(wildcards)
 	conda: NGS_env_1
-	threads: threads
+	threads: THREADS
 	log: logs_dir + "merge_callsets/{sample}.{cnv_type}.{bin_tag}.log"
 	shell:
 		"(ls {input.vcfs} > {output.vcf_list}; "
@@ -84,7 +84,7 @@ rule merge_final:
 		merged_vcf = info_dir + "{sample}/{sample}.merged.vcf",
 		vcf_list = info_dir + "{sample}/{sample}.vcf_list",
 	conda: NGS_env_1
-	threads: threads
+	threads: THREADS
 	log: logs_dir + "merge_callsets/{sample}.log"
 	shell:
 		"(ls {input.vcfs} > {output.vcf_list}; "

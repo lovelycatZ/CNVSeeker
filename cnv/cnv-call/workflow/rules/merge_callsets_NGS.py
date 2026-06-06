@@ -98,7 +98,7 @@ rule merge_respective:
 		script = HOME_DIR + "/workflow/scripts/suvivor_merge.py",
 		combo = lambda wildcards: COMBO_DICT[NGS_DATA_TYPE][wildcards.cnv_type][wildcards.bin_tag]
 	conda: NGS_env_1
-	threads: threads
+	threads: THREADS
 	log: logs_dir + "merge_callsets/{sample}.{cnv_type}.{bin_tag}.log"
 	shell:
 		"(ls {input.vcfs} > {output.vcf_list}; "
@@ -113,7 +113,7 @@ rule merge_final:
 		merged_vcf = info_dir + "{sample}/{sample}.merged.vcf",
 		vcf_list = info_dir + "{sample}/{sample}.vcf_list",
 	conda: NGS_env_1
-	threads: threads
+	threads: THREADS
 	log: logs_dir + "merge_callsets/{sample}.log"
 	shell:
 		"(ls {input.vcfs} > {output.vcf_list}; "
@@ -139,7 +139,7 @@ rule post_filter:
 		# s3 = "/gpfs/hpc/home/lijc/xiangxud/z_tmp_dataset/genomicSuperDups.b38.merge.bed",
 		# s4 = "/gpfs/hpc/home/lijc/xiangxud/z_tmp_dataset/centromere.hg38.bed",
 	conda: NGS_env_1
-	threads: threads
+	threads: THREADS
 	log: logs_dir + "post_filter/{sample}.log"
 	shell:
 		"(python {params.script1} -i {input.merged_vcf} -o {output.tmp1} -e {params.s1} -c 10 -p 0.7; "
